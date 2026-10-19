@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Full-Stack App Form</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 50px; }
+        .container { max-width: 400px; margin: auto; padding: 20px; border: 1px solid #ccc; border-radius: 10px; }
+        input, textarea, button { width: 100%; margin: 10px 0; padding: 10px; }
+        button { background-color: #28a745; color: white; border: none; cursor: pointer; }
+        button:hover { background-color: #218838; }
+        #response { margin-top: 20px; font-weight: bold; color: blue; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Submit to Flask Backend</h2>
+        <form id="myForm">
+            <input type="text" id="name" placeholder="Enter your Name" required>
+            <textarea id="message" placeholder="Enter your Message" required></textarea>
+            <button type="submit">Submit</button>
+        </form>
+        <div id="response"></div>
+    </div>
+
+    <script>
+        document.getElementById("myForm").addEventListener("submit", async function(e) {
+            e.preventDefault();
+            const name = document.getElementById("name").value;
+            const message = document.getElementById("message").value;
+            
+            try {
+                const res = await fetch("http://localhost:5000/api/submit", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ name, message })
+                });
+                const data = await res.json();
+                document.getElementById("response").innerText = data.reply;
+            } catch (error) {
+                document.getElementById("response").innerText = "Error connecting to backend.";
+                document.getElementById("response").style.color = "red";
+            }
+        });
+    </script>
+</body>
+</html>
